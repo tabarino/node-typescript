@@ -1,3 +1,4 @@
-let username: string;
-username = 'Ivan';
-console.log(username);
+import express from 'express';
+
+const app = express();
+app.listen(3000);
