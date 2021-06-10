@@ -10,5 +10,36 @@ export const createTodo: RequestHandler = (req, res, next) => {
 
   TODOS.push(newTodo);
 
-  res.status(201).json({ message: 'The todo has been created!', createdTodo: newTodo });
+  res.status(201).json({ message: 'The Todo has been created!', createdTodo: newTodo });
+};
+
+export const getTodos: RequestHandler = (req, res, next) => {
+  res.json({ todos: TODOS });
+};
+
+export const updateTodo: RequestHandler<{ id: string }> = (req, res, next) => {
+  const todoId = req.params.id;
+  const newText = (req.body as { text: string }).text;
+  const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
+
+  if (todoIndex < 0) {
+    throw new Error('Could not find Todo!');
+  }
+
+  TODOS[todoIndex] = new Todo(TODOS[todoIndex].id, newText);
+
+  res.json({ message: 'The Todo has been updated!', updatedTodo: TODOS[todoIndex] });
+};
+
+export const deleteTodo: RequestHandler<{ id: string }> = (req, res, next) => {
+  const todoId = req.params.id;
+  const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
+
+  if (todoIndex < 0) {
+    throw new Error('Could not find Todo!');
+  }
+
+  TODOS.splice(todoIndex, 1);
+
+  res.json({ message: 'The Todo has been deleted!' });
 };
